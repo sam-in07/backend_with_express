@@ -105,6 +105,29 @@ app.delete("/delete", (req, res) => {
 ```
 
 ---
+| Method     | URL       | Usage                   |
+| ---------- | --------- | ----------------------- |
+| **GET**    | `/hello`  | Fetch / read data       |
+| **POST**   | `/login`  | Send data (form / JSON) |
+| **PUT**    | `/update` | Update data             |
+| **DELETE** | `/remove` | Delete data             |
+
+
+⚠️ Why changes don’t show automatically?
+
+Because Node.js does NOT auto-restart.
+
+If you want automatic refresh, install nodemon:
+
+**npm install -g nodemon**
+
+
+Then run your server like:
+
+**nodemon server.js**
+
+
+Now changes will show instantly without restarting manually.
 
 # 📦 **5. Route Parameters**
 

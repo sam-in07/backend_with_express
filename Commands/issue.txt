@@ -1,0 +1,56 @@
+npm install express
+
+
+
+Your code is correct so far — you just need to **start the server** by adding `app.listen(...)`.
+
+Here is the completed working version:
+
+```js
+const express = require("express");
+
+const app = express();
+
+app.get("/", (req, res) => {
+    res.send("hello");
+});
+
+// start server
+app.listen(3000, () => {
+    console.log("Server running at http://localhost:3000");
+});
+```
+
+### ✔ How to run it
+
+1. Save the file as `server.js` (or any name).
+2. In your terminal:
+
+```
+node index.js
+```
+
+3. Open a browser and go to:
+
+```
+http://localhost:3000/
+```
+
+You should see:
+
+```
+hello
+```
+
+If you want, I can help you add:
+
+* auto-restart with nodemon
+* routing
+* static file serving
+* JSON API
+
+Just tell me!
+
+
+cd D:\tools\simple_server
+npm install -D nodemon

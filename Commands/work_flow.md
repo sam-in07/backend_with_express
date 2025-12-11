@@ -126,6 +126,7 @@ Then run your server like:
 
 **nodemon server.js**
 
+node --watch app.js
 
 Now changes will show instantly without restarting manually.
 

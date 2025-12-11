@@ -4,7 +4,11 @@ const express = require('express');
 const app = express();
 
 app.post('/auth/sign-up', (req, res) => {
-    res.json({ message: 'Sign-up endpoint' });
+    // console.log(req.body);
+    // res.json({ message: 'Sign-up endpoint' });
+    if(req.body.firstName.lenght <= 2) {
+        return res.status(400).json({ message: 'First name must be longer than 2 characters' });
+    }
 });
 
 

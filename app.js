@@ -16,10 +16,15 @@ app.post('/auth/sign-up', (req, res) => {
     password: z.string().min(8),
   });
   //userCreateSchema data ta pass korietssii 
-  const output = userCreateSchema.parse(req.body);
+  try {
+     const output = userCreateSchema.parse(req.body);
   console.log(output);
-
-
+  
+  res.json({ user : req.body});
+  }
+  catch(error){
+    return res.status(400).json(error.errors);
+  }
 });
 
 

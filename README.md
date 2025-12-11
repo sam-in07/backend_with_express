@@ -27,4 +27,15 @@ Here’s the short comparison:
 👉 Use **`safeParse`** for user input (predictable handling), and **`parse`** when invalid data should be treated as exceptional.
 
 flatten().fieldErrors
+[https://zod.dev/error-formatting ](https://zod.dev/error-formatting)
+
 ![alt text](image-1.png)
+
+password hasing 
+[https://www.npmjs.com/package/bcrypt](https://www.npmjs.com/package/bcrypt)
+
+
+![alt text](image-2.png)
+
+DB sathe connect jonno 
+[https://www.prisma.io/docs/getting-started/prisma-orm/add-to-existing-project/postgresql](https://www.prisma.io/docs/getting-started/prisma-orm/add-to-existing-project/postgresql)

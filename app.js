@@ -2,29 +2,42 @@ const express = require("express");
 
 const { z } = require("zod");
 const app = express();
+const bcrypt = require("bcryptjs");
+
 app.use(express.json());
-app.post("/auth/sign-up", (req, res) => {
-  // console.log(req.body);
-  // res.json({ message: 'Sign-up endpoint' });
-  // if(req.body.firstName.lenght <= 2) {
-  //     return res.status(400).json({ message: 'First name must be longer than 2 characters' });
-  // }
+
+// const {flattenError} = z;
+
+app.post("/auth/sign-up", async (req, res) => {
   const userCreateSchema = z.object({
     firstName: z.string().min(3),
     lastName: z.string().min(3),
     email: z.string().email(),
     password: z.string().min(8),
   });
-  //userCreateSchema data ta pass korietssii
+
   const { success, data, error } = userCreateSchema.safeParse(req.body);
 
   if (!success) {
-    // error.flatten().fieldErrors;
-    return res.status(400).json({ error: error.flatten().fieldErrors });
+    return res.status(400).json({
+      message: "Invalid data.",
+      errors: error.flatten().fieldErrors
+    });
   }
 
-  res.json({ user: data });
+  // 🔐 Hash the password from validated data
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+
+  const user = {
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
+    password: hashedPassword
+  };
+
+  res.json({ user });
 });
+
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

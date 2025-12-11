@@ -25,3 +25,6 @@ Here’s the short comparison:
   ⚡ Exceptions used for invalid data.
 
 👉 Use **`safeParse`** for user input (predictable handling), and **`parse`** when invalid data should be treated as exceptional.
+
+flatten().fieldErrors
+![alt text](image-1.png)

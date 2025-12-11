@@ -19,7 +19,8 @@ app.post("/auth/sign-up", (req, res) => {
   const { success, data, error } = userCreateSchema.safeParse(req.body);
 
   if (!success) {
-    return res.status(400).json({ error: "Invalid data." });
+    // error.flatten().fieldErrors;
+    return res.status(400).json({ error: error.flatten().fieldErrors });
   }
 
   res.json({ user: data });

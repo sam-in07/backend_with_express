@@ -42,4 +42,4 @@ valo doc file
 [https://www.prisma.io/docs/getting-started/prisma-orm/add-to-existing-project/postgresql](https://www.prisma.io/docs/getting-started/prisma-orm/add-to-existing-project/postgresql)
 
 
-
+[https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/generating-prisma-client](https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/generating-prisma-client)

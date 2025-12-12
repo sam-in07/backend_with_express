@@ -1,10 +1,9 @@
-import express from 'express';
-import { z } from 'zod';
-import bcrypt from 'bcrypt';
-import prisma from './prisma.js';
+import express from "express";
+import { z } from "zod";
+import bcrypt from "bcrypt";
+import { prisma } from "./prisma.js";
 
 const app = express();
-
 app.use(express.json());
 
 app.post("/auth/sign-up", async (req, res) => {
@@ -15,31 +14,34 @@ app.post("/auth/sign-up", async (req, res) => {
     password: z.string().min(8),
   });
 
-  const { success, data, error } = userCreateSchema.safeParse(req.body);
+  const parsed = userCreateSchema.safeParse(req.body);
 
-  if (!success) {
+  if (!parsed.success) {
     return res.status(400).json({
       message: "Invalid data.",
-      errors: error.flatten().fieldErrors
+      errors: parsed.error.flatten().fieldErrors,
     });
   }
 
+  const { firstName, lastName, email, password } = parsed.data;
+
   // Hash password
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+  const passwordHash = await bcrypt.hash(password, 10);
 
   try {
-    // Save to database
-    const user = await prisma.users.create({
+    // Create user in Prisma
+    const createdUser = await prisma.user.create({
       data: {
-        first_name: data.firstName,
-        last_name: data.lastName,
-        email: data.email,
-        password_hash: hashedPassword,
+        firstName,
+        lastName,
+        email,
+        passwordHash,
       },
     });
 
-    return res.json({ user });
-
+    // Return user without password
+    const { passwordHash: _, ...userWithoutPassword } = createdUser;
+    res.status(201).json({ user: userWithoutPassword });
   } catch (err) {
     console.error(err);
 

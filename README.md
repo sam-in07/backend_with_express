@@ -37,5 +37,9 @@ password hasing
 
 ![alt text](image-2.png)
 
-DB sathe connect jonno 
+DB sathe connect jonno :
+valo doc file 
 [https://www.prisma.io/docs/getting-started/prisma-orm/add-to-existing-project/postgresql](https://www.prisma.io/docs/getting-started/prisma-orm/add-to-existing-project/postgresql)
+
+
+

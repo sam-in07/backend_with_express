@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { prisma } from '../prisma.js';
+import { prisma } from "../prisma.js";
+import { z } from "zod"; // <-- Add this
 export const getAllUsers = async (req, res) => {
   const users = await prisma.user.findMany({
     select: {
@@ -26,45 +27,44 @@ export const getAllUsers = async (req, res) => {
   });
 };
 
-
 export const getUserById = async (req, res) => {
-    const userId = req.params.id;
+  const userId = req.params.id;
 
-    const userGetSchema = z.object({
-        id: z.uuid(),
-    });
+  const userGetSchema = z.object({
+    id: z.string().uuid(), // make sure this is string().uuid()
+  });
 
-    const { success, error } = userGetSchema.safeParse({
-        id: userId,
-    });
+  const { success, error } = userGetSchema.safeParse({ id: userId });
 
-    if (!success) {
-        return res.status(400).json({ message: 'Validation failed', data: z.flattenError(error) });
-    }
+  if (!success) {
+    return res
+      .status(400)
+      .json({ message: "Validation failed", data: z.flattenError(error) });
+  }
 
-    const user = await prisma.user.findUnique({
-        where: {
-            id: userId
-        },
-        omit: {
-            passwordHash: true
-        }
-    });
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      // add other fields except passwordHash
+    },
+  });
 
-    if (!user) {
-        return res.status(404).json({ status: 'error', message: 'User not found' });
-    }
+  if (!user) {
+    return res.status(404).json({ status: "error", message: "User not found" });
+  }
 
-    res.json({ 
-        status: 'success', 
-        message: 'User fetched successfully', 
-        data: { user } 
-    });
-}
+  res.json({
+    status: "success",
+    message: "User fetched successfully",
+    data: { user },
+  });
+};
 
-
-
-export const updateUser  = async (req, res) => {
+export const updateUser = async (req, res) => {
   const userId = req.params.id;
   const userUpdateSchema = z.object({
     // firstName: z.string().min(3),
@@ -109,8 +109,6 @@ export const updateUser  = async (req, res) => {
   });
 };
 
-
-
 export const deleteUser = async (req, res) => {
   const userId = req.params.id;
 
@@ -154,4 +152,4 @@ export const deleteUser = async (req, res) => {
     message: "User deleted successfully",
     data: { user: deletedUser },
   });
-} ;
+};

@@ -69,7 +69,7 @@ app.post("/auth/sign-in", async (req, res) => {
   const user = await prisma.user.findUnique({
     where: { email: data.email },
   });
-
+ 
   if (!user) {
     return res
       .status(400)
@@ -99,6 +99,33 @@ app.post("/auth/sign-in", async (req, res) => {
     data: {
       accessToken: accesstoken,
     },
+  });
+});
+
+//auth me ..api ke private korbo ..currretn;ly je req dise or info req gula 
+app.get('/auth/me', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+  }
+  const accessToken = authHeader.split(' ')[1];
+  //array 2 part a...token oijnno .. [0] te braerer [1] te token
+  const secretkey = process.env.JWT_SECRET;
+ jwt.verify(accessToken, secretkey, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+    }
+    //const userId = decoded.userId;  // assuming your JWT payload has { userId }
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.sub },
+      omit: { passwordHash: true }, /*password ta dekhabo na*/
+    });
+
+    res.json({
+      status: "success",
+      message: "User fetched successfully",
+      data: user,
+    });
   });
 });
 

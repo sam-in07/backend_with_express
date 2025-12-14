@@ -3,6 +3,7 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { prisma } from "./prisma.js";
 import { id } from "zod/locales";
+import jwt from "jsonwebtoken";
 
 const app = express();
 app.use(express.json());
@@ -54,39 +55,86 @@ app.post("/auth/sign-up", async (req, res) => {
   }
 });
 
-app.get('/users', async (req, res) => {
+app.post("/auth/sign-in", async (req, res) => {
+  const userSignInSchema = z.object({
+    email: z.email(),
+    password: z.string().min(8),
+  });
+  const { success, data, error } = userSignInSchema.safeParse(req.body);
+  if (!success) {
+    return res
+      .status(400)
+      .json({ message: "Validation failed", data: z.flattenError(error) });
+  }
+  const user = await prisma.user.findUnique({
+    where: { email: data.email },
+  });
+
+  if (!user) {
+    return res
+      .status(400)
+      .json({ status: "error", message: "Invalid email or password" });
+  }
+  const isPasswordValid = await bcrypt.compare(
+    data.password,
+    user.passwordHash
+  );
+  if (!isPasswordValid) {
+    return res
+      .status(401)
+      .json({ status: "error", message: "Invalid email or password" });
+  }
+  const secretkey = process.env.JWT_SECRET;
+  const accesstoken = jwt.sign(
+    {
+      sub: user.id,
+    },
+    secretkey,
+    { expiresIn: "1h" }
+  );
+
+  res.json({
+    status: "success",
+    message: "Sign-in successful",
+    data: {
+      accessToken: accesstoken,
+    },
+  });
+});
+
+app.get("/users", async (req, res) => {
   const users = await prisma.user.findMany({
     select: {
       id: true,
       firstName: true,
       lastName: true,
-      email: true
+      email: true,
     },
     orderBy: {
-      createdAt: 'desc'
+      createdAt: "desc",
     },
     take: 10,
     //joto gula numbner oto gula asbe
     //This specifies the maximum number of records to retrieve from the database. In this case, it limits the results to 10 users.
 
     skip: 0,
-   //This specifies the number of records to skip 
-
+    //This specifies the number of records to skip
   });
   // res.json({ users , message: 'User fetched successfully' });
-   res.json({ status: 'success',  message: 'User fetched successfully' , data: users });
+  res.json({
+    status: "success",
+    message: "User fetched successfully",
+    data: users,
+  });
 });
 
-
-app.patch('/users/:id', async (req, res) => {
- 
-
+app.patch("/users/:id", async (req, res) => {
   const userId = req.params.id;
   const userUpdateSchema = z.object({
     // firstName: z.string().min(3),
     // lastName: z.string().min(3),
-     id: z.uuid(),
-        firstName: z.string(),
+    id: z.uuid(),
+    firstName: z.string(),
     lastName: z.string(),
     //cmtsless gula partial update
   });
@@ -97,7 +145,9 @@ app.patch('/users/:id', async (req, res) => {
   });
 
   if (!success) {
-    return res.status(400).json({ message: 'Validation failed', data: z.flattenError(error) });
+    return res
+      .status(400)
+      .json({ message: "Validation failed", data: z.flattenError(error) });
   }
 
   const user = {
@@ -110,19 +160,20 @@ app.patch('/users/:id', async (req, res) => {
       id: userId,
     },
     data: user,
-    //pass ke shorie dibo dekhabo na 
+    //pass ke shorie dibo dekhabo na
     omit: {
       passwordHash: true,
-    }
+    },
   });
 
-  res.json({ 
-    status: 'success',  
-    message: 'User updated successfully' , 
-    data: updatedUser });
+  res.json({
+    status: "success",
+    message: "User updated successfully",
+    data: updatedUser,
+  });
 });
 
-app.delete('/users/:id', async (req, res) => {
+app.delete("/users/:id", async (req, res) => {
   const userId = req.params.id;
 
   const userDeleteSchema = z.object({
@@ -134,31 +185,37 @@ app.delete('/users/:id', async (req, res) => {
   });
 
   if (!success) {
-    return res.status(400).json({ message: 'Validation failed', data: z.flattenError(error) });
+    return res
+      .status(400)
+      .json({ message: "Validation failed", data: z.flattenError(error) });
   }
-  // user ta bairna korle bair bar khube 
-  const user =   await prisma.user.findUnique({
-    where : {
-      id : userId
-    }
-  })
- // na thakle error dibe
+  // user ta bairna korle bair bar khube
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+  // na thakle error dibe
   if (!user) {
-    return res.status(404).json({ status: 'error', message: 'User not found' });
+    return res.status(404).json({ status: "error", message: "User not found" });
   }
 
   const deletedUser = await prisma.user.delete({
     where: {
-      id: userId
+      id: userId,
     },
     select: {
-        passwordHash: false,
-        id: true,
-        // Add other fields you want to select here
-    }
+      passwordHash: false,
+      id: true,
+      // Add other fields you want to select here
+    },
   });
 
-  res.json({ status: 'success', message: 'User deleted successfully', data: { user: deletedUser } });
+  res.json({
+    status: "success",
+    message: "User deleted successfully",
+    data: { user: deletedUser },
+  });
 });
 
 app.listen(3000, () => {

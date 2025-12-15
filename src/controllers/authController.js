@@ -1,6 +1,6 @@
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { prisma } from '../prisma.js';
+import { prisma } from '../database/prisma.js';
 import jwt from "jsonwebtoken";
 export const userSignUp = async (req, res) => {
   const userCreateSchema = z.object({

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { prisma } from "../prisma.js";
+import { prisma } from "../database/prisma.js";
 import { z } from "zod"; // <-- Add this
 export const getAllUsers = async (req, res) => {
   const users = await prisma.user.findMany({

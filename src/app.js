@@ -1,7 +1,7 @@
 import express from "express";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { prisma } from "./prisma.js";
+import { prisma } from "./database/prisma.js";
 import { id } from "zod/locales";
 import jwt from "jsonwebtoken";
 import { authMiddleware } from './middleware/authMiddleware.js';

@@ -23,3 +23,34 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+//product 
+model Product {
+  id String @id @default(uuid()) @db.Uuid()
+  name String @db.VarChar(255)
+  description String @db.Text()
+  price Float
+  stock Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  categoryId String @db.Uuid()
+  
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+
+}
+
+
+//catagory 
+
+model Category {
+  id String @id @default(uuid()) @db.Uuid()
+  name String @unique @db.VarChar(255)
+  description String @db.Text()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+    products Product[]
+
+
+}

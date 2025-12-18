@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import categoryRoutes from './routes/categoryRoute.js';
-import productRoutes from './routes/productRoute.js';
+import productRoutes from './routes/products/productRoute.js';
 const app = express();
 app.use(express.json());
 
@@ -21,6 +21,9 @@ app.use('/users', userRoutes);
 app.use('/category', categoryRoutes);
 app.use('/product', productRoutes);
 
+//product -> /product 
+//product image => /product/image 
+//product varient => /product/variant
 
 
 app.listen(3000, () => {

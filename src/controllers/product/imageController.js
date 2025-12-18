@@ -9,6 +9,6 @@ export const getAllImage = async (req, res) =>{
     status: 'success',
     message: 'All product images fetched successfully',
     data: images
-  })
+  });
 
 }

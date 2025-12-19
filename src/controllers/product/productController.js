@@ -165,6 +165,7 @@ export const updateProduct = async (req, res) => {
 }
 
 export const deleteProduct = async (req, res) =>{
+  //asignment
   const productId = req.params.id;
 
   const productSchema = z.object({

@@ -1,6 +1,7 @@
 import { prisma } from '../../database/prisma.js'
 import { z } from 'zod'
 
+
 export const getAllProduct = async (req, res) =>{
 
   const products = await prisma.product.findMany({  })

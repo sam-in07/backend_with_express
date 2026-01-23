@@ -100,9 +100,9 @@ export const createImage = async (req, res) => {
 
 
 export const deleteImage = async (req, res) => {
-  res.json({ message: 'This is assignment please do it yourself' });
+  res.json({ message: 'This is  please do it yourself' });
 }
 
 export const updateImage = async (req, res) => {
-  res.json({ message: 'This is assignment please do it yourself' });
+  res.json({ message: 'This is  please do it yourself' });
 }

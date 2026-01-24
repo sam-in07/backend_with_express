@@ -44,6 +44,7 @@ export const createOrder = async (req, res) => {
   }
 
   // get the cart id for the user
+  //cart -> cartItem -> product , variant
   const cart = await prisma.cart.findFirst({
     where: {
       userId: userid,

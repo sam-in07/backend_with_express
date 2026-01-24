@@ -11,6 +11,7 @@ import userRoutes from './routes/userRoutes.js';
 import categoryRoutes from './routes/categoryRoute.js';
 import productRoutes from './routes/products/index.js';
 import cartRoute from './routes/cartRoute.js';
+import orderRoutes from './routes/orderRoutes.js';
 
 const app = express();
 app.use(express.json());
@@ -23,7 +24,7 @@ app.use('/users', userRoutes);
 app.use('/category', categoryRoutes);
 app.use('/product', productRoutes);
 app.use('/cart', cartRoute);
-
+app.use('/order', orderRoutes);
 
 //product -> /product 
 //product image => /product/image 

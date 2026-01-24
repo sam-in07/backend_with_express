@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { prisma } from "../database/prisma.js";
 
+//add entry order table 
+// add entry to order_item table for each cart item
+//update te product and varient stock
+//clear the cart
 const calculateTotalAmount = (cartItems) => {
   let total = 0;
   for (const item of cartItems) {
@@ -219,7 +223,8 @@ export const getOrderById = async (req, res) => {
   });
 };
 
-// todo: implement update order functionality
+// todo: implement update order functionality assignemts
+
 export const updateOrder = async (req, res) => {
   res.json({ message: "Update order" });
 };
@@ -251,3 +256,5 @@ export const deleteOrder = async (req, res) => {
     message: "Order deleted successfully",
   });
 };
+
+//float : decimal a rakhe 

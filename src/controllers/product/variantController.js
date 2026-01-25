@@ -90,10 +90,106 @@ export const createVariant = async (req, res) => {
 
 export const updateVariant = async (req, res) => {
   // Implementation for updating a variant
-  res.json({ message: 'This is assignment please do it yourself' });
+  // res.json({ message: 'This is assignment please do it yourself' });
+  const variantId = req.params.id;
+
+  // Validate UUID
+  const idSchema = z.object({
+    id: z.string().uuid()
+  });
+  const idValidation = idSchema.safeParse({ id: variantId });
+
+  if (!idValidation.success) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Bad request: Invalid UUID format',
+    });
+  }
+
+  // Validate body
+  const updateSchema = z.object({
+    variantName: z.string().max(50).optional(),
+    variantValue: z.string().max(50).optional(),
+    priceAdjustment: z.number().optional(),
+    stockQuantity: z.number().int().nonnegative().optional(),
+    imageUrl: z.string().url().optional()
+  });
+
+  const { success, data, error } = updateSchema.safeParse(req.body);
+
+  if (!success) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Bad request: ' + error.errors.map(e => e.message).join(', '),
+    });
+  }
+
+  // Check if variant exists
+  const existingVariant = await prisma.productVariant.findUnique({
+    where: { id: variantId }
+  });
+
+  if (!existingVariant) {
+    return res.status(404).json({
+      status: 'error',
+      message: 'Variant not found',
+    });
+  }
+
+  // Update variant
+  const updatedVariant = await prisma.productVariant.update({
+    where: { id: variantId },
+    data: {
+      ...data
+    }
+  });
+
+  res.json({
+    status: 'success',
+    message: 'Product variant updated successfully',
+    data: updatedVariant
+  });
+  
 }
 
 export const deleteVariant = async (req, res) => {
   // Implementation for deleting a variant
-  res.json({ message: 'This is assignment please do it yourself' });
+  // res.json({ message: 'This is assignment please do it yourself' });
+
+    const variantId = req.params.id;
+
+  // Validate UUID
+  const idSchema = z.object({
+    id: z.string().uuid()
+  });
+  const idValidation = idSchema.safeParse({ id: variantId });
+
+  if (!idValidation.success) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Bad request: Invalid UUID format',
+    });
+  }
+
+  // Check if variant exists
+  const existingVariant = await prisma.productVariant.findUnique({
+    where: { id: variantId }
+  });
+
+  if (!existingVariant) {
+    return res.status(404).json({
+      status: 'error',
+      message: 'Variant not found',
+    });
+  }
+
+  // Delete variant
+  await prisma.productVariant.delete({
+    where: { id: variantId }
+  });
+
+  res.json({
+    status: 'success',
+    message: 'Product variant deleted successfully',
+  });
 }

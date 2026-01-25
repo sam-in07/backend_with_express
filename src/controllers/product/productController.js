@@ -136,13 +136,25 @@ export const updateProduct = async (req, res) => {
     })
   }
 
-  const productUpdateSchema = z.object({
-    name: z.string().min(3).optional(),
+  // const productUpdateSchema = z.object({
+  //   name: z.string().min(3).optional(),
+  //   description: z.string().min(5).optional(),
+  //   price: z.number().positive().optional(),
+  //   stock: z.number().int().optional(),
+  //   categoryId: z.uuid().optional()
+  // })
+    const productUpdateSchema = z.object({
+    title: z.string().min(3).optional(),
+    slug: z.string().min(3).optional(),
     description: z.string().min(5).optional(),
-    price: z.number().positive().optional(),
-    stock: z.number().int().optional(),
-    categoryId: z.uuid().optional()
-  })
+    basePrice: z.number().positive().optional(),
+    originalPrice: z.number().positive().optional(),
+    stockQuantity: z.number().int().nonnegative().optional(),
+    specifications: z.any().optional(),
+    isFeatured: z.boolean().optional(),
+    isActive: z.boolean().optional(),
+    categoryId: z.string().uuid().optional()
+  });
 
   const { success: bodySuccess, data: bodyData, error: bodyError } = productUpdateSchema.safeParse(req.body);
 

@@ -88,6 +88,7 @@ export const createCategory = async (req, res) =>{
 
 }
 
+//complete ase 
 export const updateCategory = async (req, res) =>{
   //assignment part 
   const categoryId = req.params.id;

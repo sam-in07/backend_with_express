@@ -2,8 +2,8 @@ Small Assignment:
 
 1. Complete the product variant controller update and delete function (done)
 2. Complete the product image controller update and delete function (done)
-3. Update the product controller update function
-4. Update the category controller update
+3. Update the product controller update function (done) 
+4. Update the category controller update (done)
 
 
 GitHub e Push Diye TrackSheet e Submit Diben.
